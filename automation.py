@@ -48,7 +48,7 @@ with open(target_yaml_file, "w") as file:
 
 
     # Use yq to update the target YAML file
-    subprocess.run(["yq", "eval", "-i", f". = import('{target_yaml_file}')", target_yaml_file])
+    # subprocess.run(["yq", "eval", "-i", f". = import('{target_yaml_file}')", target_yaml_file])
 
 # Commit the changes to the current branch
 subprocess.run(["git", "add", target_yaml_file])
