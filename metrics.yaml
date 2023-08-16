@@ -1,0 +1,10 @@
+cfr: 0
+total_releases: 0
+total_features: 1
+total_bugs: 1
+total_hotfixes: 1
+
+release_1:
+  bugs: 2
+  features: 29
+  hotfixes: 10
