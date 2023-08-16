@@ -25,40 +25,35 @@ for message in merge_commits:
     elif re.search(hotfix_pattern, message):
         hotfix_messages.append(message)
 
-# Generate the YAML content for releases
-release_yaml = ""
-for release_number in range(1, 4):  # Assuming three releases
-    release_yaml += f"""
-release_{release_number}:
-  bugs: {release_number * 2}
-  features: {release_number * 10}
-  hotfixes: {release_number}
-"""
-
-# Generate the overall YAML content
-yaml_content = f"""
-cfr: 0
-total_releases: 3  # Update this number based on the actual number of releases
-total_features: {len(feature_messages)}
-total_bugs: {len(bug_messages)}
-total_hotfixes: {len(hotfix_messages)}
-
-{release_yaml}
-"""
-
-# Path to the target YAML file
+# Read the existing metrics.yaml content
 target_yaml_file = "metrics.yaml"
+with open(target_yaml_file, "r") as file:
+    existing_yaml_content = file.read()
 
-# Write the YAML content to a temporary file
-temp_yaml_file = "temp_metrics.yaml"
-with open(temp_yaml_file, "w") as file:
-    file.write(yaml_content)
+# Update total_releases based on the number of release sections
+total_releases = existing_yaml_content.count("release_")
+new_release_number = total_releases + 1
 
-# Use yq to update the target YAML file in place
-subprocess.run(["yq", "eval", "-i", f". = import('{temp_yaml_file}')", target_yaml_file])
+# Generate the release YAML content for the new release
+new_release_yaml = f"""
+release_{new_release_number}:
+  bugs: {new_release_number * 2}
+  features: {new_release_number * 10}
+  hotfixes: {new_release_number}
+"""
 
-# Remove the temporary file
-os.remove(temp_yaml_file)
+# Update the total_releases value
+updated_yaml_content = existing_yaml_content.replace(
+    f"total_releases: {total_releases}",
+    f"total_releases: {new_release_number}"
+)
+
+# Add the new release YAML content
+updated_yaml_content = updated_yaml_content.replace("# release_2:", new_release_yaml, 1)
+
+# Write the updated content back to metrics.yaml
+with open(target_yaml_file, "w") as file:
+    file.write(updated_yaml_content)
 
 # Commit the changes to the current branch
 subprocess.run(["git", "add", target_yaml_file])
