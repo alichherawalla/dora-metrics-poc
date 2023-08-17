@@ -1,45 +1,5 @@
-cfr: 10%
-total_releases: 11
-total_features: 11
-total_bugs: 11
-total_hotfixes: 11
-release_1:
-  cfr: 10%
-  total: 5
-  features: 5
-  bugs: 5
-  hotfixes: 5
-release_2:
-  cfr: 20%
-  total: 5
-  features: 5
-  bugs: 5
-  hotfixes: 5
-release_3:
-  cfr: 20%
-  total: 5
-  features: 5
-  bugs: 5
-  hotfixes: 5
-release_4:
-  cfr: 20%
-  total: 5
-  features: 5
-  bugs: 5
-  hotfixes: 5
-release_5:
-  cfr: 20%
-  total: 5
-  features: 5
-  bugs: 5
-  hotfixes: 5
-release_11:
-  total: 3
-  features: 1
-  bugs: 1
-  hotfixes: 1
-release_12:
-  total: 3
-  features: 1
-  bugs: 1
-  hotfixes: 1
+cfr: 0 %
+total_releases: 1
+total_features: 6
+total_bugs: 0
+total_hotfixes: 0

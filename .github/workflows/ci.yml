@@ -4,16 +4,43 @@ on:
   pull_request:
     branches:
       - main
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    # skip workflow during version bumpup
 
 jobs:
   calculate_commits:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: 🛠️ Checkout
+        uses: actions/checkout@v3
         with:
+          token: ${{ secrets.GH_PAT }}
           fetch-depth: 0
-      - uses: actions/setup-python@v4
+      - name: 🛠️ 🐍 Setup python
+        uses: actions/setup-python@v4
         with:
           python-version: "pypy3.9"
+
+      - name: ⬇️ Install yq using snap
+        run: |
+          sudo apt update
+          sudo apt install -y snapd
+          sudo snap install yq
+
+      - name: ✅ Verify yq installation
+        run: yq --version
       - run: python automation.py
+
+      - name: Configure Git user creds
+        run: |
+          git config --global user.email "abhishek@wednesday.is"
+          git config --global user.name "Abhishek Mishra"
+
+      - name: 🔏 Commit the metrics file
+        run: |
+          git add .
+          git commit -m "Update metrics.yaml [skip ci]"
+
+      - name: 🚀 Push changes
+        run: git push origin ${{ github.head_ref }} # Push to the pull request branch

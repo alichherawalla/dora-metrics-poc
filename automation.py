@@ -3,7 +3,19 @@ import re
 import os
 import datetime
 import yaml
-import json
+
+def calculate_change_failure_rate(num_deployments, num_issues):
+    if num_deployments <= 0:
+        raise ValueError("Number of deployments must be greater than 0")
+
+    if num_issues < 0:
+        raise ValueError("Number of issues cannot be negative")
+
+    change_failure_rate = (num_issues / num_deployments) * 100
+    return round(change_failure_rate, 2)
+
+
+
 
 # Run git log command to get merge commit messages
 git_log_command = "git log --oneline origin/main..origin/dev"
@@ -33,7 +45,10 @@ target_yaml_file = "metrics.yaml"
 number_of_features = len(feature_messages)
 number_of_bugs = len(feature_messages)
 number_of_hotfixes = len(feature_messages)
-total = number_of_bugs + number_of_hotfixes + number_of_features
+total_deployments = number_of_bugs + number_of_hotfixes + number_of_features
+total_issues = number_of_bugs + number_of_hotfixes
+cfr = calculate_change_failure_rate(total_deployments, total_issues)
+stringified_cfr = f"""{cfr} %"""
 
 if os.path.exists(target_yaml_file):
     print("Found existing metrics.yml, updating it with the latest release...")
@@ -49,17 +64,16 @@ if os.path.exists(target_yaml_file):
         current_features = int(total_features) + 1
         current_bugs = int(total_bugs) + 1
         current_hotfixes = int(total_hotfixes) + 1
-        
         release_metrics['total_releases'] = current_release
         release_metrics['total_features'] = current_features
         release_metrics['total_bugs'] = current_bugs
         release_metrics['total_hotfixes'] = current_hotfixes
-
-        current_release_dict = { 'total': total, 'features': number_of_features, 'bugs': number_of_bugs, 'hotfixes': number_of_hotfixes }
+        release_metrics['cfr'] = stringified_cfr
+        
+        current_release_dict = { 'total': total_deployments, 'features': number_of_features, 'bugs': number_of_bugs, 'hotfixes': number_of_hotfixes, 'cfr': stringified_cfr }
         
         # append the current release metrics
-        release_metrics[f"""release_{current_release + 1}"""] = current_release_dict 
-        print(release_metrics)
+        release_metrics[f"""release_{current_release}"""] = current_release_dict 
         
         output_string = ""
         for outer_key, outer_value in release_metrics.items():
@@ -89,74 +103,15 @@ else:
     with open(target_yaml_file, 'w') as fp:
         pass
     yaml_content = f"""
-    .cfr = "0%" |
+    .cfr = "{stringified_cfr}" |
     .total_releases = {total_releases} |
     .total_features = {number_of_features} |
     .total_bugs = {number_of_bugs} |
     .total_hotfixes = {number_of_hotfixes}
     """
-        
+    
+    print(yaml_content)        
     yq_operation = f"""yq -i '{yaml_content}' metrics.yaml"""
     os.system(yq_operation)
    
 
-# Check if the metrics file exists
-# if os.path.exists(target_yaml_file):
-#     # Read the existing YAML content
-#     with open(target_yaml_file, "r") as yaml_file:
-#         existing_yaml = yaml.safe_load(yaml_file)
-    
-#     # Determine the number of releases from the existing YAML content
-#     total_releases = existing_yaml.get("total_releases", 0)
-    
-#     # Generate the YAML content for releases
-#     release_yaml = ""
-#     for release_number in range(1, total_releases + 1):
-#         release_info = existing_yaml.get(f"release_{release_number}", {})
-#         release_yaml += f"""
-# release_{release_number}:
-#   bugs: {release_info.get("bugs", 0)}
-#   features: {release_info.get("features", 0)}
-#   hotfixes: {release_info.get("hotfixes", 0)}
-# """
-# else:
-#     total_releases = 0
-#     release_yaml = ""
-
-# # Generate the overall YAML content
-# yaml_content = f"""
-# cfr: 0
-# total_releases: {total_releases}
-# total_features: {len(feature_messages)}
-# total_bugs: {len(bug_messages)}
-# total_hotfixes: {len(hotfix_messages)}
-
-# {release_yaml}
-# """
-
-# # Write the updated YAML content
-# with open(target_yaml_file, "w") as file:
-#     file.write(yaml_content)
-
-# # Commit the changes to the current branch
-# subprocess.run(["git", "add", target_yaml_file])
-# subprocess.run(["git", "commit", "-m", "Update metrics.yml file"])
-
-
-# b = f"""
-# yq -i '
-#   .cfr = "25%" |
-#   .total_releases = "4" |
-#   .total_features = "13" |
-#   .total_bugs = "6" |
-#   .total_hotfixes = "6" |
-#   .release_1.features = "4" |
-#   .release_1.bugs = "0" |
-#   .release_1.hotfixes = "1" |
-#   .release_1.deployments = "5" |
-#   .release_2.features = "5" |
-#   .release_2.bugs = "2" |
-#   .release_2.hotfixes = "0" |
-#   .release_2.deployments = "0" 
-# ' metrics.yaml
-# """
