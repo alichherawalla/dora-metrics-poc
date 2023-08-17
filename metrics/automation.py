@@ -10,16 +10,6 @@ def get_current_date():
     formatted_date = today.strftime("%d-%m-%Y")
     return formatted_date # '17-08-2023'
 
-def calculate_change_failure_rate(num_deployments, num_issues):
-    if num_deployments <= 0:
-        raise ValueError("Number of deployments must be greater than 0")
-
-    if num_issues < 0:
-        raise ValueError("Number of issues cannot be negative")
-
-    change_failure_rate = (num_issues / num_deployments) * 100
-    return round(change_failure_rate, 2) # 22.12
-
 def calc_cfr(n_issues, n_deps):
     cfr = (n_issues / n_deps) * 100
     return round(cfr, 2) # 22.12
