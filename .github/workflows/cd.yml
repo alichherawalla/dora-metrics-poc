@@ -54,6 +54,9 @@ jobs:
       - name: 📣 Notify Compass
         run: ./scripts/notify-compass.sh
 
+      - name: Git pull
+        run: git pull origin ${{ github.ref }}
+
       - name: 🚀 Push changes
         uses: ad-m/github-push-action@master
         with:
