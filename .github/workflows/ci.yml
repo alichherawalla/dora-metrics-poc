@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
 jobs:
   calculate_metrics:
@@ -50,9 +49,11 @@ jobs:
       - name: 📣 Notify Compass
         run: ./scripts/notify-compass.sh
 
-      - name: 💻 Configure Git user creds
+      - name: 💻 Commit files
         run: |
-          git config --global user.email "git@wednesday.is"
+          git config --local user.email "git@wednesday.is"
+          git config --local user.name "github-actions[bot]"
+          git commit -a -m "chore: updated metrics insights [skip ci]"
 
       - name: 🚀 Push changes
         uses: ad-m/github-push-action@master
