@@ -1,4 +1,4 @@
-name: Calculate Commits
+name: Calculate CFR
 
 on:
   pull_request:
@@ -48,4 +48,4 @@ jobs:
           git commit -m "Update metrics.yaml [skip ci]"
 
       - name: 🚀 Push changes
-        run: git push origin ${{ github.head_ref }} # Push to the pull request branch
+        run: git push ${{ github.head_ref }} # Push to the pull request branch
