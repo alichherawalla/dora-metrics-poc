@@ -1,0 +1,15 @@
+total_releases: 1
+total_feature_releases: 1
+total_bugfix_releases: 1
+total_hotfix_releases: 1
+total_releases_without_hotfixes: 1
+last_release:
+  features: 1
+  total_tickets: 1
+  date: 17-08-2023
+  bugs: 1
+  hotfixes: 1
+  hotfix_to_release_ratio: 0 %
+  failures_to_total_previous_tickets_ratio: 0 %
+  feature_to_bug_ratio: 0 %
+  release_without_bugs_ratio: 0 %
