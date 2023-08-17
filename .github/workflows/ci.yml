@@ -30,9 +30,12 @@ jobs:
 
       - name: ✅ Verify yq installation
         run: yq --version
+
+      - name: ➕ Calculate CFR metrics
+        run: yq --version
       - run: python automation.py
 
-      - name: Configure Git user creds
+      - name: 💻 Configure Git user creds
         run: |
           git config --global user.email "abhishek@wednesday.is"
           git config --global user.name "Abhishek Mishra"
