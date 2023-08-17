@@ -1,12 +1,12 @@
 name: Calculate Metrics
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
 jobs:
-  calculate_metrics:
+  notify_compass_metrics:
     runs-on: ubuntu-latest
     environment: development
     steps:
@@ -16,25 +16,14 @@ jobs:
           token: ${{ secrets.GH_PAT }}
           fetch-depth: 0
 
-      - name: 🛠️ 🐍 Setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "pypy3.9"
-
       - name: ⬇️ Install yq using snap
         run: |
           sudo apt update
           sudo apt install -y snapd
           sudo snap install yq
 
-      - name: ⬇️ Install other dependencies
-        run: pip3 install -r requirements.txt
-
       - name: ✅ Verify yq installation
         run: yq --version
-
-      - name: ➕ Calculate CFR metrics
-        run: python ./metrics/automation.py
 
       - name: 🔎 Fetch secrets
         env:
@@ -46,18 +35,5 @@ jobs:
           echo "COMPASS_USER_API_KEY=$COMPASS_USER_API_KEY" >> $GITHUB_ENV
           echo "COMPASS_METRICS_BASE_URL=$COMPASS_METRICS_BASE_URL" >> $GITHUB_ENV
 
-      # - name: 📣 Notify Compass
-      #   run: ./scripts/notify-compass.sh
-      # to run with cd
-
-      - name: 💻 Commit files
-        run: |
-          git config --local user.email "git@wednesday.is"
-          git config --local user.name "github-actions[bot]"
-          git commit -am "chore: updated metrics insights [skip ci]"
-
-      - name: 🚀 Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GH_PAT }}
-          branch: dev
+      - name: 📣 Notify Compass
+        run: ./scripts/notify-compass.sh
