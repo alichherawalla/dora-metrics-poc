@@ -53,7 +53,7 @@ jobs:
         run: |
           git config --local user.email "git@wednesday.is"
           git config --local user.name "github-actions[bot]"
-          git commit -a -m "chore: updated metrics insights [skip ci]"
+          git commit -am "chore: updated metrics insights [skip ci]"
 
       - name: 🚀 Push changes
         uses: ad-m/github-push-action@master
