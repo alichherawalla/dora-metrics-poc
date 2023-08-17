@@ -189,7 +189,6 @@ def calculate_releases(target_data_file = 'metrics/releases.yaml'):
             .releases["{index}"].hotfixes = {number_of_hotfixes}
             """      
                   
-            print(yaml_content)        
             yq_operation = f"""yq -i '{yaml_content}' {target_data_file}"""
             os.system(yq_operation)
                 
