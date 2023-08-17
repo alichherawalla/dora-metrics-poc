@@ -1,4 +1,4 @@
-name: Calculate Metrics
+name: Update metrics
 
 on:
   push:
