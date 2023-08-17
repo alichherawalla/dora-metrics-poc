@@ -1,0 +1,7 @@
+releases:
+  - no: 1
+    date: 17-08-2023
+    features: 1
+    bugs: 1
+    hotfixes: 1
+    cfr: 66.67 %

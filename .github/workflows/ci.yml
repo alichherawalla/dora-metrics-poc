@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-    # skip workflow during version bumpup
 
 jobs:
   calculate_cfr:
@@ -40,14 +39,6 @@ jobs:
         run: |
           git config --global user.email "abhishek@wednesday.is"
           git config --global user.name "Abhishek Mishra"
-
-      # - name: 🔏 Commit the metrics file
-      #   run: |
-      #     git add .
-      #     git commit -m "Update metrics.yaml [skip ci]"
-
-      # - name: 🚀 Push changes
-      #   run: git push ${{ github.head_ref }} # Push to the pull request branch
 
       - name: Push changes
         uses: ad-m/github-push-action@master
