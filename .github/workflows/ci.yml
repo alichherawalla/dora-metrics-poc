@@ -35,8 +35,7 @@ jobs:
         run: yq --version
 
       - name: ➕ Calculate CFR metrics
-        run: yq --version
-      - run: python automation.py
+        run: python automation.py
 
       - name: 💻 Configure Git user creds
         run: |
