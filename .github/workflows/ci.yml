@@ -42,10 +42,16 @@ jobs:
           git config --global user.email "abhishek@wednesday.is"
           git config --global user.name "Abhishek Mishra"
 
-      - name: 🔏 Commit the metrics file
-        run: |
-          git add .
-          git commit -m "Update metrics.yaml [skip ci]"
+      # - name: 🔏 Commit the metrics file
+      #   run: |
+      #     git add .
+      #     git commit -m "Update metrics.yaml [skip ci]"
 
-      - name: 🚀 Push changes
-        run: git push ${{ github.head_ref }} # Push to the pull request branch
+      # - name: 🚀 Push changes
+      #   run: git push ${{ github.head_ref }} # Push to the pull request branch
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_PAT }}
+          branch: ${{ github.ref }}
