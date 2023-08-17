@@ -37,6 +37,16 @@ jobs:
       - name: ➕ Calculate CFR metrics
         run: python ./metrics/automation.py
 
+      - name: 🔎 Fetch secrets
+        env:
+          COMPASS_USER_EMAIL: ${{ secrets.COMPASS_USER_EMAIL }}
+          COMPASS_USER_API_KEY: ${{ secrets.COMPASS_USER_API_KEY }}
+          COMPASS_METRICS_BASE_URL: ${{ secrets.COMPASS_METRICS_BASE_URL }}
+        run: |
+          echo "COMPASS_USER_EMAIL=$COMPASS_USER_EMAIL" >> $GITHUB_ENV
+          echo "COMPASS_USER_API_KEY=$COMPASS_USER_API_KEY" >> $GITHUB_ENV
+          echo "COMPASS_METRICS_BASE_URL=$COMPASS_METRICS_BASE_URL" >> $GITHUB_ENV
+
       - name: 📣 Notify Compass
         run: ./scripts/notify-compass.sh
 

@@ -3,14 +3,13 @@
 TARGET_YAML=metrics/data.yaml
 
 # Set common req payload values
-USER_EMAIL="abhishek@wednesday.is"
-USER_API_KEY="ATATT3xFfGF0jqp3v_zS_HUFJdOkXkcFEZ8twcVF0rVQO6zE9YSvQk_uJq0qWCE9zhOCFgTHKCmkc3hyd9dekp-mVrb843qeYFzpAHJP3sMlcb6aOQkS2mxj9i0pKZgxSR80sBR5iKT2eG2PURZ8WSrhK5_fu4sosuGcZPxItfAL2CPCgTfmD44=3CB2F8CC"
-URL="https://wednesday.atlassian.net/gateway/api/compass/v1/metrics"
+USER_EMAIL=$COMPASS_USER_EMAIL
+USER_API_KEY=$COMPASS_USER_API_KEY
+URL=$COMPASS_METRICS_BASE_URL
 COMMON_METIRCS_ID="ari:cloud:compass:e8e03695-06ef-4cb5-8c6b-1779f03bb72c:metric-source/f35e9589-f113-4456-84b4-8d515c2bf2d8"
 
 # Convert current UTC time to IST
 TIMESTAMP=$(TZ="Asia/Kolkata" date +'%Y-%m-%dT%H:%M:%SZ')
-
 
 
 # hotfix to release ratio
