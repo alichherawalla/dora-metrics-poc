@@ -55,8 +55,8 @@ jobs:
           git config --local user.email "git@wednesday.is"
           git config --local user.name "github-actions[bot]"
           git commit -am "chore: updated metrics insights [skip ci]"
-          git checkout dev  # Make sure you are on the 'dev' branch
-          git add .         # Stage all changes
+          git checkout dev  
+          git add .         
           git commit -m "chore: updated metrics insights [skip ci]"
 
       - name: 🚀 Push changes
