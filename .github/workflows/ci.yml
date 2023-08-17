@@ -1,26 +1,61 @@
-name: Calculate Commits
+name: Calculate CFR
 
 on:
   pull_request:
     branches:
       - main
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
 jobs:
-  calculate_commits:
+  calculate_cfr:
     runs-on: ubuntu-latest
-
+    environment: development
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: 🛠️ Checkout
+        uses: actions/checkout@v3
         with:
-          python-version: 3.x
+          token: ${{ secrets.GH_PAT }}
+          fetch-depth: 0
 
-      - name: Install dependencies
+      - name: 🛠️ 🐍 Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "pypy3.9"
+
+      - name: ⬇️ Install yq using snap
         run: |
-          python -m pip install --upgrade pip
+          sudo apt update
+          sudo apt install -y snapd
+          sudo snap install yq
 
-      - name: Run script
-        run: python automation.py
+      - name: ⬇️ Install other dependencies
+        run: pip3 install -r requirements.txt
+
+      - name: ✅ Verify yq installation
+        run: yq --version
+
+      - name: ➕ Calculate CFR metrics
+        run: python ./metrics/automation.py
+
+      - name: 🔎 Fetch secrets
+        env:
+          COMPASS_USER_EMAIL: ${{ secrets.COMPASS_USER_EMAIL }}
+          COMPASS_USER_API_KEY: ${{ secrets.COMPASS_USER_API_KEY }}
+          COMPASS_METRICS_BASE_URL: ${{ secrets.COMPASS_METRICS_BASE_URL }}
+        run: |
+          echo "COMPASS_USER_EMAIL=$COMPASS_USER_EMAIL" >> $GITHUB_ENV
+          echo "COMPASS_USER_API_KEY=$COMPASS_USER_API_KEY" >> $GITHUB_ENV
+          echo "COMPASS_METRICS_BASE_URL=$COMPASS_METRICS_BASE_URL" >> $GITHUB_ENV
+
+      - name: 📣 Notify Compass
+        run: ./scripts/notify-compass.sh
+
+      - name: 💻 Configure Git user creds
+        run: |
+          git config --global user.email "git@wednesday.is"
+
+      - name: 🚀 Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_PAT }}
+          branch: dev
