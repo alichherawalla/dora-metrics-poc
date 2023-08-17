@@ -4,3 +4,8 @@ releases:
     features: 1
     bugs: 1
     hotfixes: 1
+  - no: 2
+    date: 17-08-2023
+    features: 1
+    bugs: 0
+    hotfixes: 0
