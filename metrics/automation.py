@@ -53,7 +53,7 @@ def calc_releases_without_bugs(n_releases, n_bugfree_releases):
 
 def identify_commits():
     # Run git log command to get merge commit messages
-    git_log_command = "git log --oneline origin/main..origin/dev"
+    git_log_command = "git log --oneline --merges -n 2"
     merge_commits = subprocess.check_output(git_log_command, shell=True, text=True).splitlines()
 
     # Regular expressions for categorization
